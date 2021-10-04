@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body class="container">
+
+<header>
+    <%- include('../partials/header'); %>
+</header>
+
+<main>
+        <div class="row">
+          <% if(Object.keys(workers).length){ %>
+            <% for(worker in workers) { %>
+              <div class="col-md-4" >
+                <canvas id="<%= workers[worker].id %>"></canvas>
+                <p class="text-center"><%= workers[worker].socket.params.login %></p>
+              </div>
+
+            <% } %>
+          <% }else{ %>
+            <div class="col"><h2>No Workers connected to proxy.</h2></div>
+          <% } %>
+        </div>
+</main>
+
+<footer>
+    <%- include('../partials/footer'); %>
+</footer>
+<script type="text/javascript" src="/assets/dist/js/nodejsproxy.min.js"></script>
+<script>
+
+const labels = [
+  'Shares',
+  'Rejected',
+];
+
+<% for(worker in workers) { %>
+  new Chart(document.getElementById('<%= workers[worker].id %>'), {
+      type: 'doughnut',
+      data:  {
+        labels: labels,
+        datasets: [{
+          label: 'My First dataset',
+          backgroundColor: [
+            'rgb(75, 192, 192)',
+            'rgb(255, 99, 132)',
+          ],
+          hoverBackgroundColor: [
+            'rgb(75, 192, 192)',
+            'rgb(255, 99, 132)',
+          ],
+          hoverBorderWidth:0,
+          data: [<%= workers[worker].shares %>, <%= workers[worker].reject %>],
+        }]
+      },
+
+      options: {
+
+      }
+
+
+  });
+<% } %>
+</script>
+</body>
+</html>

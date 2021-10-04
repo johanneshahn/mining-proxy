@@ -1,0 +1,49 @@
+{
+  "proxy":{
+    "host": "127.0.0.1",
+    "port": 3416
+  },
+  "app":{
+    "host": "127.0.0.1",
+    "port": 3000
+  },
+  "pools":{
+
+    "epic":{
+      "host":  "51pool.online",
+      "port":  4416,
+      "login": "testaccount",
+      "pass":  "testpass",
+      "algos": [
+        "randomx"
+      ]
+    },
+    "epic2":{
+      "host":  "51pool.online",
+      "port":  4416,
+      "login": "testaccount2",
+      "pass":  "testpass2",
+      "algos": [
+        "randomxXmrig"
+      ]
+    }
+
+  },
+  "miners": {
+    "floouser;mysuperworker":{
+      "algos": [
+        "randomx"
+      ]
+    },
+    "testsrb#workername":{
+      "algos": [
+        "randomx"
+      ]
+    },
+    "epicuser":{
+      "algos": [
+        "randomxXmrig"
+      ]
+    }
+  }
+}
