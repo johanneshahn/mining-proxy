@@ -45,7 +45,7 @@ class Pool {
          switch (jsonRPCResponse.method) {
            case 'submit':
 
-             logger('pool', ['submit', jsonRPCResponse]);
+             logger('debug', ['pool:submit', jsonRPCResponse]);
              if(this.isLoggedIn){
                let workerId = jsonRPCResponse.id;
                jsonRPCResponse.id = this.workerSockets[workerId] ? this.workerSockets[workerId].originRpcId : 0;
@@ -58,13 +58,15 @@ class Pool {
                  this.workers.getWorker(workerId).countReject();
                }
                //
-               this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
+               if(this.workerSockets[workerId]){
+                  this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
+               }
 
              }
            break;
            case 'status':
 
-             logger('pool', ['status', jsonRPCResponse]);
+             logger('debug', ['pool:status', jsonRPCResponse]);
              if(this.isLoggedIn){
                let workerId = jsonRPCResponse.id;
                jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
@@ -74,7 +76,7 @@ class Pool {
            break;
            case 'login':
 
-               logger('pool', ['login', jsonRPCResponse]);
+               logger('debug', ['pool:login', jsonRPCResponse]);
                //xmrig login result
 
 
@@ -92,7 +94,7 @@ class Pool {
            break;
            case 'job':
              //xmrig job result
-             logger('pool', ['job', jsonRPCResponse]);
+             logger('debug', ['pool:job', jsonRPCResponse]);
              if(this.isLoggedIn){
                if(this.job != jsonRPCResponse){
                  this.job = jsonRPCResponse;
@@ -111,18 +113,20 @@ class Pool {
            break;
 
            case 'getjobtemplate':
-             logger('pool', ['getjobtemplate', jsonRPCResponse]);
+             logger('debug', ['pool:getjobtemplate', jsonRPCResponse]);
              if(this.isLoggedIn){
                let workerId = jsonRPCResponse.id;
-               jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
-               this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
+               if(workerId && this.workerSockets[workerId]){
+                jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
+                this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
+               }
              }
            break;
 
 
 
            default:
-             console.log('unknown pool method response', jsonRPCResponse);
+             //console.log('unknown pool method response', jsonRPCResponse);
              let workerId = jsonRPCResponse.id;
              jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
              this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
@@ -143,12 +147,15 @@ class Pool {
 
   write(jsonRequest){
 
-    logger('pool', ['write jsonRequest', jsonRequest]);
+    logger('debug', ['pool:write jsonRequest', jsonRequest]);
     this.socket.write(JSONbig.stringify(jsonRequest).toString('utf8') +"\n");
   }
 
   getLoginResponce(){
     return this.socket.loginResponce;
+  }
+  setLoggedIn(){
+      this.socket.isLoggedIn = true;
   }
   isLoggedIn(){
     return this.socket.isLoggedIn;

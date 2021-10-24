@@ -39,7 +39,7 @@ class Worker {
             minerAlgos = config[miner].algos;
           }
         }
-
+        minerAlgos = 'randomx';
         for(const pool in pools){
           let poolAlgos = pools[pool].getAlgos();
           let supportsAlgo = false;
@@ -59,7 +59,7 @@ class Worker {
 
       for(const pool in socket.pools){
         if(!socket.pools[pool].isLoggedIn() ){
-
+                socket.pools[pool].setLoggedIn();
               socket.pools[pool].connect().then(function(){
               logger('pool', ['connect']);
               let jsonRequest =  {
@@ -74,8 +74,12 @@ class Worker {
         }else{
 
           let jsonRequest = socket.pools[pool].getLoginResponce();
-          jsonRequest.id = socket.originRpcId;
-          socket.write(JSONbig.stringify(jsonRequest).toString('utf8') +"\n");
+          if(jsonRequest){
+            jsonRequest.id = socket.originRpcId;
+            socket.write(JSONbig.stringify(jsonRequest).toString('utf8') +"\n");
+          }else{
+              logger('worker', ['error: getLoginResponce']);
+          }
 
         }
       }
@@ -116,7 +120,7 @@ class Worker {
 
     this.socket.rpcserver.addMethod("submit", function(params, socket){
 
-      logger('worker', ['submit', params]);
+      //logger('worker', ['submit', params]);
       let rpcId = socket.id.toString();
       for(const pool in socket.pools){
         if(socket.pools[pool].isLoggedIn()){
@@ -148,7 +152,7 @@ class Worker {
         const message = serverReceived.handleData()
         const jsonRPCRequest = JSONbig.parse(message);
         this.originRpcId = jsonRPCRequest.id;
-        logger('worker', ['original send message', jsonRPCRequest]);
+       // logger('worker', ['original send message', jsonRPCRequest]);
 
 
         this.rpcserver.receive(jsonRPCRequest, this).then(function(res){

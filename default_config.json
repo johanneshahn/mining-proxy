@@ -1,0 +1,26 @@
+{
+  "proxy":{
+    "host": "127.0.0.1",
+    "port": 3001
+  },
+  "app":{
+    "host": "127.0.0.1",
+    "port": 3000
+  },
+  "pools":{
+
+    "epic":{
+      "host":  "51pool.online",
+      "port":  3416,
+      "login": "USERNAME",
+      "pass":  "SUPERSECRET",
+      "algos": ["randomx"]
+    }
+    
+  },
+  "miners": {
+    "USERNAME":{
+        "algos": ["randomx"]
+        }
+    }
+}
