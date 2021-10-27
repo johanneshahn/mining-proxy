@@ -84,11 +84,13 @@ class Pool {
 
                  this.isLoggedIn = true;
                  let workerId = jsonRPCResponse.id;
-                 jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
-                 this.loginResponce = jsonRPCResponse;
+                   if(workerId && this.workerSockets[workerId]){
+		     jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
+                     this.loginResponce = jsonRPCResponse;
 
-                 this.workers.getWorker(workerId).isLoggedIn = true;
-                 this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
+                     this.workers.getWorker(workerId).isLoggedIn = true;
+                     this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
+                  }
                }
 
            break;
