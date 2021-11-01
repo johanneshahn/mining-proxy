@@ -1,0 +1,44 @@
+{
+  "name": "nodejsproxy",
+  "version": "1.0.0",
+  "description": "Local Mining-Proxy",
+  "main": "proxy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "proxy",
+    "mining",
+    "local",
+    "nodejs"
+  ],
+  "author": "Johannes Hahn",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "bootstrap": "^5.1.0",
+    "chart.js": "^3.5.0",
+    "chartjs-plugin-doughnutlabel": "^2.0.3",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "forever": "^4.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-cssmin": "^4.0.0",
+    "grunt-contrib-sass": "^2.0.0",
+    "grunt-contrib-uglify": "^5.0.1",
+    "json-bigint": "^1.0.0",
+    "json-rpc-2.0": "^0.2.18",
+    "jsonrpc-node": "^1.2.93",
+    "net": "^1.0.2",
+    "short-unique-id": "^4.3.3",
+    "shortid": "^2.2.16",
+    "socket.io": "^4.1.3",
+    "sqlite3": "^5.0.2",
+    "ws": "^8.0.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-nodeunit": "~0.4.1"
+  }
+}
