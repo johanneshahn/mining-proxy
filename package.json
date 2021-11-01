@@ -4,6 +4,7 @@
   "description": "Local Mining-Proxy",
   "main": "proxy.js",
   "scripts": {
+    "start": "node start.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -16,8 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "bootstrap": "^5.1.0",
-    "chart.js": "^3.5.0",
+    "bootstrap": "^5.1.3",
+    "chart.js": "^3.6.0",
     "chartjs-plugin-doughnutlabel": "^2.0.3",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
@@ -32,7 +33,7 @@
     "net": "^1.0.2",
     "short-unique-id": "^4.3.3",
     "shortid": "^2.2.16",
-    "socket.io": "^4.1.3",
+    "socket.io": "^4.3.1",
     "sqlite3": "^5.0.2",
     "ws": "^8.0.0"
   },

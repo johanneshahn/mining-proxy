@@ -19,6 +19,11 @@ class Stats {
     for(const workerId in workers){
       let worker = workers[workerId.toString()];
       if(worker.socket.isConnected == true){
+
+        console.log('hps', worker.hps);
+        console.log('blockTimeDuration', worker.blockTimeDuration);
+        console.log('jobSharesDuration', worker.jobSharesDuration);
+
         connected_workers[workerId.toString()] = worker;
       }
     }

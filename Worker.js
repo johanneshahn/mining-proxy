@@ -20,8 +20,15 @@ class Worker {
     this.lastJob = 0;
     this.isLoggedIn = false;
     this.isError = false;
-
+    this.jobTemplate = {};
+    this.jobShares = 0;
+    this.jobSharesDuration = 0;
+    this.hps = 0;
+    this.blockStart = 0;
+    this.blockTimeDuration = 60;
     this.socket = socket;
+    this.jobDifficulty = 0;
+    this.algo = '';
     this.socket.rpcserver = new JSONRPCServer();
 
     this.socket.rpcserver.addMethod("login", function(params, socket){
@@ -120,7 +127,7 @@ class Worker {
 
     this.socket.rpcserver.addMethod("submit", function(params, socket){
 
-      //logger('worker', ['submit', params]);
+      logger('worker', ['submit', params]);
       let rpcId = socket.id.toString();
       for(const pool in socket.pools){
         if(socket.pools[pool].isLoggedIn()){
@@ -156,6 +163,7 @@ class Worker {
 
 
         this.rpcserver.receive(jsonRPCRequest, this).then(function(res){
+
           //console.log('socket on data responce', res);
         });
       }
@@ -181,6 +189,7 @@ class Worker {
   countShare(worker){
     this.lastShare = Date.now();
     this.shares++;
+    this.jobShares++;
   }
 
   countReject(worker){
@@ -190,6 +199,46 @@ class Worker {
   countJob(worker){
     this.lastJob = Date.now();
     this.jobs++;
+  }
+
+  setJobTemplate(jobtemplate){
+
+    if(jobtemplate && this.jobTemplate && jobtemplate.params && this.jobTemplate.params){
+
+      if(jobtemplate.params.height != this.jobTemplate.params.height){
+
+        let blocktime = Math.round(+new Date()/1000) - this.blockStart;
+        //if shares greater 0 we know the miner is hashing on this job
+        if(this.jobShares > 0){
+           for(var diff in this.jobTemplate.params.difficulty){
+
+             if(this.jobTemplate.params.difficulty[diff][0] == this.jobTemplate.params.algorithm){
+               this.jobDifficulty = Number(this.jobTemplate.params.difficulty[diff][1]);
+               this.algo = this.jobTemplate.params.difficulty[diff][0];
+               break;
+             }
+           }
+           this.blockTimeDuration = Math.round((this.blockTimeDuration + blocktime) / 2);
+           this.jobSharesDuration = Math.round((this.jobSharesDuration + this.jobShares) / 2);
+           this.hps = Math.round((this.hps + (  (this.jobDifficulty / this.blockTimeDuration) * (this.jobSharesDuration == 0 ? this.jobShares: this.jobSharesDuration)  )) / 2);
+
+
+        }
+
+        this.jobShares = 0;
+        this.blockStart = Math.round(+new Date()/1000);
+
+      }
+    }else{
+      this.blockStart = Math.round(+new Date()/1000);
+    }
+    
+    this.jobTemplate = jobtemplate;
+
+
+  }
+  getJobTemplate(){
+    return this.jobTemplate;
   }
 
 

@@ -11,11 +11,18 @@
 
 <main>
         <div class="row">
+          <div class="col-12">
+            <p>Miners online: <%= workers.length+1 %></p>
+          </div>
+
+
+        </div>
+        <div class="row">
           <% if(Object.keys(workers).length){ %>
             <% for(worker in workers) { %>
               <div class="col-md-4" >
                 <canvas id="<%= workers[worker].id %>"></canvas>
-                <p class="text-center"><%= workers[worker].socket.params.login %></p>
+                <p class="text-center"><%= workers[worker].socket.params.login %> - <%= workers[worker].algo %> (<%= workers[worker].hps %> hps)</p>
               </div>
 
             <% } %>

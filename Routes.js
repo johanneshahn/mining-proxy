@@ -7,8 +7,11 @@ module.exports = function(stats, db, config) {
 
   app.get('/', (req, res) => {
      let workers = stats.connectedWorkers();
-     //console.log(workers);
-     res.render('pages/index', {workers: workers});
+    // console.log('workers', workers);
+    // res.write(JSON.stringify(workers));
+    //res.setHeader('Content-Type', 'application/json');
+    //res.send(JSON.stringify(workers));
+    res.render('pages/index', {workers: workers});
   })
 
   app.listen(config.port, config.host,() => {

@@ -107,6 +107,7 @@ class Pool {
                 for(const workerSocket in this.workerSockets){
                   let worker = this.workerSockets[workerSocket];
                   this.workers.getWorker(worker.id).countJob();
+                  this.workers.getWorker(worker.id).setJobTemplate(this.job);
                   worker.write(JSONbig.stringify(this.job).toString('utf8') +"\n");
                 }
 
