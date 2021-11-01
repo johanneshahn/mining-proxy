@@ -1,5 +1,11 @@
 module.exports = function(grunt) {
-
+    
+    
+  /* new add to all gruntfiles */
+  const sass = require('node-sass');
+  require('load-grunt-tasks')(grunt);
+  /* new add to all gruntfiles */
+  
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -7,6 +13,10 @@ module.exports = function(grunt) {
 
 
     sass: {
+        options: {
+            implementation: sass,
+            sourceMap: true,
+        },
         dist: {
             options: {
                 loadPath: ['./node_modules/bootstrap/scss']
@@ -66,17 +76,11 @@ module.exports = function(grunt) {
 
 
 
-     // Load the plugin that provides the "sass" task.
-  grunt.loadNpmTasks('grunt-contrib-sass');
-
-    // Load the plugin that provides the "uglify" task.
+  grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-
-      // Load the plugin that provides the "concat" task.
-  grunt.loadNpmTasks('grunt-contrib-concat');
-
-   // Load the plugin that provides the "cssmin" task.
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-imagemin');
+  grunt.loadNpmTasks('grunt-modernizr');
 
    // Default task(s).
 

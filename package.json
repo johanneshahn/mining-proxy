@@ -25,11 +25,13 @@
     "forever": "^4.0.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-cssmin": "^4.0.0",
-    "grunt-contrib-sass": "^2.0.0",
+    "grunt-contrib-imagemin": "^4.0.0",
     "grunt-contrib-uglify": "^5.0.1",
+    "grunt-modernizr": "^3.0.2",
     "json-bigint": "^1.0.0",
     "json-rpc-2.0": "^0.2.18",
     "jsonrpc-node": "^1.2.93",
+    "load-grunt-tasks": "^5.1.0",
     "net": "^1.0.2",
     "short-unique-id": "^4.3.3",
     "shortid": "^2.2.16",
@@ -39,7 +41,10 @@
   },
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-nodeunit": "~0.4.1"
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-contrib-sass": "^2.0.0",
+    "grunt-sass": "^3.1.0",
+    "node-sass": "^6.0.1"
   }
 }
