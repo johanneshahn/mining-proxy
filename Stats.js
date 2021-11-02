@@ -8,21 +8,23 @@ class Stats {
     this.workers = workers;
   }
 
+  isWorkerOnline(workerId){
 
+      let worker = this.workers.getWorker(workerId);
+      if(worker.socket.isConnected == true){
+        return true;
+      }
+      return false;
+  }
 
-
-  connectedWorkers(){
+  connectedWorkers(isOnline){
     let connected_workers = [];
     let workers = this.workers.getAllWorkers();
 
 
     for(const workerId in workers){
       let worker = workers[workerId.toString()];
-      if(worker.socket.isConnected == true){
-
-        console.log('hps', worker.hps);
-        console.log('blockTimeDuration', worker.blockTimeDuration);
-        console.log('jobSharesDuration', worker.jobSharesDuration);
+      if(worker.socket.isConnected == isOnline){
 
         connected_workers[workerId.toString()] = worker;
       }
@@ -30,6 +32,7 @@ class Stats {
 
     return connected_workers;
   }
+
   errorWorkers(){
     let error_workers = [];
     let workers = this.workers.getAllWorkers();

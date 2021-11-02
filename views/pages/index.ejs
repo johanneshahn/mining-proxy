@@ -12,24 +12,45 @@
 <main>
         <div class="row">
           <div class="col-12">
-            <p>Miners online: <%= Object.keys(workers).length+1 %></p>
+            <p>Workers online: <%= Object.keys(workers_online).length %><br/>
+            <a href="#workers_offline">Workers offline</a>: <%= Object.keys(workers_offline).length %></p>
           </div>
-
-
         </div>
+        <h2>Workers Online</h2>
         <div class="row">
-          <% if(Object.keys(workers).length){ %>
-            <% for(worker in workers) { %>
+          <% if(Object.keys(workers_online).length){ %>
+            <% for(worker in workers_online) { %>
               <div class="col-md-3" >
-                <canvas id="<%= workers[worker].id %>"></canvas>
-                <p class="text-center"><%= workers[worker].socket.params.login %> - <%= workers[worker].algo %> (<%= workers[worker].hps %> hps)</p>
+                <canvas id="<%= workers_online[worker].id %>"></canvas>
+                <p class="text-center"><%= workers_online[worker].socket.params.login %> - <%= workers_online[worker].algo %> (<%= workers_online[worker].hps %> hps)</p>
               </div>
 
             <% } %>
+
+
+
           <% }else{ %>
             <div class="col"><h2>No Workers connected to proxy.</h2></div>
           <% } %>
         </div>
+        <h2 id="workers_offline">Workers Offline</h2>
+        <div class="row">
+          <% if(Object.keys(workers_offline).length){ %>
+            <% for(worker in workers_offline) { %>
+              <div class="col-md-3" >
+                <canvas id="<%= workers_offline[worker].id %>"></canvas>
+                <p class="text-center"><%= workers_offline[worker].socket.params.login %> - <%= workers_offline[worker].algo %> (<%= workers_offline[worker].hps %> hps)</p>
+              </div>
+
+            <% } %>
+
+
+
+          <% }else{ %>
+            <div class="col"><h2>No Workers offline.</h2></div>
+          <% } %>
+        </div>
+
 </main>
 
 <footer>
@@ -43,8 +64,8 @@ const labels = [
   'Rejected',
 ];
 
-<% for(worker in workers) { %>
-  new Chart(document.getElementById('<%= workers[worker].id %>'), {
+<% for(worker in workers_online) { %>
+  new Chart(document.getElementById('<%= workers_online[worker].id %>'), {
       type: 'doughnut',
       data:  {
         labels: labels,
@@ -59,7 +80,34 @@ const labels = [
             'rgb(255, 99, 132)',
           ],
           hoverBorderWidth:0,
-          data: [<%= workers[worker].shares %>, <%= workers[worker].reject %>],
+          data: [<%= workers_online[worker].shares %>, <%= workers_online[worker].reject %>],
+        }]
+      },
+
+      options: {
+
+      }
+
+
+  });
+<% } %>
+<% for(worker in workers_offline) { %>
+  new Chart(document.getElementById('<%= workers_offline[worker].id %>'), {
+      type: 'doughnut',
+      data:  {
+        labels: labels,
+        datasets: [{
+          label: 'My First dataset',
+          backgroundColor: [
+            'rgb(75, 192, 192)',
+            'rgb(255, 99, 132)',
+          ],
+          hoverBackgroundColor: [
+            'rgb(75, 192, 192)',
+            'rgb(255, 99, 132)',
+          ],
+          hoverBorderWidth:0,
+          data: [<%= workers_offline[worker].shares %>, <%= workers_offline[worker].reject %>],
         }]
       },
 
