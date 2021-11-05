@@ -8,24 +8,25 @@ class Pool {
 
   constructor(workers, config) {  // Constructor
 
-
      this.config = config;
-
-
      this.socket = new net.Socket();
      this.socket.job;
+     this.socket.lastjob = 0;
      this.socket.difficulty = 0;
      this.socket.loginResponce;
      this.socket.isLoggedIn = false;
      this.socket.workerSockets = {};
      this.socket.workers = workers;
      this.socket.setEncoding("utf8");
-     let job = "blabla";
+     let job = "";
+
+
      this.socket.on('close', function(e ) {
        this.isLoggedIn = false;
        delete this.job;
        delete this.loginResponce;
        logger('pool', ['Connection closed']);
+       process.exit(1);
      });
 
      this.socket.on('error', function(e) {
@@ -33,6 +34,7 @@ class Pool {
        delete this.job;
        delete this.loginResponce;
        logger('pool', ['Error connecting to node. Is node running?']);
+       process.exit(1);
      });
 
      this.socket.on('data', function(buffer) {
@@ -47,6 +49,7 @@ class Pool {
 
              logger('debug', ['pool:submit', jsonRPCResponse]);
              if(this.isLoggedIn){
+
                let workerId = jsonRPCResponse.id;
                jsonRPCResponse.id = this.workerSockets[workerId] ? this.workerSockets[workerId].originRpcId : 0;
 
@@ -63,31 +66,33 @@ class Pool {
                }
 
              }
+
            break;
            case 'status':
 
              logger('debug', ['pool:status', jsonRPCResponse]);
+
              if(this.isLoggedIn){
                let workerId = jsonRPCResponse.id;
                jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
                this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
 
              }
+
            break;
            case 'login':
 
                logger('debug', ['pool:login', jsonRPCResponse]);
                //xmrig login result
-
-
                if(jsonRPCResponse.result && ((typeof jsonRPCResponse.result == 'string' &&  jsonRPCResponse.result == 'ok') || (typeof jsonRPCResponse.result == 'object') && jsonRPCResponse.result.status == 'OK' )){
 
+                 //if not logged in as soon as possible then epic server is flooded
+                 //if real login fails then we get this in responce later
                  this.isLoggedIn = true;
                  let workerId = jsonRPCResponse.id;
                    if(workerId && this.workerSockets[workerId]){
-		     jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
+		                 jsonRPCResponse.id = this.workerSockets[workerId].originRpcId;
                      this.loginResponce = jsonRPCResponse;
-
                      this.workers.getWorker(workerId).isLoggedIn = true;
                      this.workerSockets[workerId].write(JSONbig.stringify(jsonRPCResponse).toString('utf8') +"\n");
                   }
@@ -98,18 +103,27 @@ class Pool {
              //xmrig job result
              logger('debug', ['pool:job', jsonRPCResponse]);
              if(this.isLoggedIn){
+
                if(this.job != jsonRPCResponse){
+                 this.lastjob = Math.round(+new Date()/1000);
                  this.job = jsonRPCResponse;
                }
 
 
+               let newjob = Math.round(+new Date()/1000);
 
-                for(const workerSocket in this.workerSockets){
+               if((newjob - this.lastjob) > 60){
+                  process.exit(1);
+               }
+
+
+
+               for(const workerSocket in this.workerSockets){
                   let worker = this.workerSockets[workerSocket];
                   this.workers.getWorker(worker.id).countJob();
                   this.workers.getWorker(worker.id).setJobTemplate(this.job);
                   worker.write(JSONbig.stringify(this.job).toString('utf8') +"\n");
-                }
+               }
 
              }
 
@@ -146,6 +160,10 @@ class Pool {
     this.socket.connect(this.config.port, this.config.host, function() {
 
     });
+  }
+
+  closeConnection(){
+    this.socket.destroy();
   }
 
   write(jsonRequest){

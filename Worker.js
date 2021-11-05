@@ -232,7 +232,7 @@ class Worker {
     }else{
       this.blockStart = Math.round(+new Date()/1000);
     }
-    
+
     this.jobTemplate = jobtemplate;
 
 

@@ -32,6 +32,8 @@ for(const poolConfig in config.pools){
   pools[poolConfig] = new Pool(workers, config.pools[poolConfig]);
 }
 
+
+
 let stats = new Stats(db, workers);
 routes(stats, db, config.app);
 
@@ -47,7 +49,7 @@ var server = net.createServer(function(socket) {
 //  console.log(socket.remoteAddress);
   socket.id = 'w' + workerSocketUid().toString();
   let worker = new Worker(socket.id, socket, pools, config.miners);
-  
+
   workers.addWorker(socket.id, worker);
 
 });
