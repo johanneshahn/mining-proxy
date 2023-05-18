@@ -1,6 +1,6 @@
 
 //log types worker, proxy
-const logTypes = ["default"];//"proxy","proxy","pool"
+const logTypes = ["pool"];//"proxy","proxy","pool"
 
 exports.logger = (type, msgs) => {
 
